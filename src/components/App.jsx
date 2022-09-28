@@ -3,6 +3,7 @@ import { Wrapper, Container } from './Main.styled';
 import ContactList from './ContactList/ContactList';
 import Form from './Form/Form';
 import Filter from './Filter/Filter';
+import { nanoid } from 'nanoid';
 
 class App extends Component {
   state = {
@@ -18,7 +19,7 @@ class App extends Component {
   componentDidMount () {
     const contacts = JSON.parse(localStorage.getItem('contacts'));
     if(contacts?.length) {
-      this.setState({contacts,})
+      this.setState({contacts})
     }
   }
 
@@ -28,23 +29,23 @@ class App extends Component {
     }
   }
 
-  addContact = data => {
-    const sameNames = this.state.contacts.filter(contact => {
-      const sameName = contact.name === data.name;
-      return sameName;
-    });
+  addContact = ({ name, number }) => {
+    if (this.state.contacts.find(contact => contact.name.toLowerCase === name.toLowerCase)) {
+      alert(name + ' is already in contacts');
+      return;
+    }
 
-    console.log(sameNames);
-    if(sameNames.length >= 1) {
-      alert("This contact already exists");
-  } else {
-    this.setState(prevState => ({
-      contacts: [...prevState.contacts, data]
-    }))
-  }
+    const contact = {
+      name,
+      number,
+      id: nanoid(),
+    };
 
-   
-  }
+    this.setState(({ contacts }) => ({
+      contacts: [contact, ...contacts],
+    }));
+  };
+
 
   handleChange = e => {
     const { name, value } = e.currentTarget;

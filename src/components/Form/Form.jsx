@@ -45,7 +45,6 @@ class Form extends Component {
         this.setState( {name: '', number: '' });
     }
 
-
     render() {
         const { invalidForm } = this.state;
         return (
